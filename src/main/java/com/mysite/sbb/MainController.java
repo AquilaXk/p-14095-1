@@ -7,15 +7,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class MainController {
     @GetMapping("/")
-    public void index() {
-        // 콘솔 출력이라 고객 브라우저에 전송되지 않음
-        System.out.println("index() 메서드 호출됨!");
+    @ResponseBody
+    public String index() {
+        return "SBB";
 
     }
 
     @GetMapping("/hello")
-    public void hello() {
-        System.out.println("hello() 메서드 호출됨!");
+    @ResponseBody
+    public String hello() {
+        return "안녕하세요";
     }
 
 }
