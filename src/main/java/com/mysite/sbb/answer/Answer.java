@@ -1,18 +1,24 @@
-package com.mysite.sbb;
+package com.mysite.sbb.answer;
 
+import com.mysite.sbb.question.Question;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
+@Setter
+@Getter
 public class Answer {
     @Id
+    // AUTO_INCREMENT 설정
     @GeneratedValue(strategy = IDENTITY)
     private int id;
 
-    private LocalDate createDate;
+    private LocalDateTime createDate;
 
     @ManyToOne
     private Question question;

@@ -1,5 +1,9 @@
 package com.mysite.sbb;
 
+import com.mysite.sbb.answer.Answer;
+import com.mysite.sbb.answer.AnswerRepository;
+import com.mysite.sbb.question.Question;
+import com.mysite.sbb.question.QuestionRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -16,6 +21,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 class PostRepositoryTest {
     @Autowired
     private QuestionRepository questionRepository;
+
+    @Autowired
+    private AnswerRepository answerRepository;
+
 
     @Test
     @DisplayName("findAll")
@@ -83,5 +92,63 @@ class PostRepositoryTest {
         questionRepository.delete(question);
 
         assertThat(questionRepository.count()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("답변 생성")
+    @Transactional
+    void t8() {
+        Question question = questionRepository.findById(2).get();
+
+        Answer answer = new Answer();
+        answer.setContent("네 자동으로 생성됩니다.");
+        answer.setQuestion(question);
+        answer.setCreateDate(LocalDateTime.now());
+        answerRepository.save(answer);
+    }
+
+    @Test
+    @DisplayName("답변 생성 by oneToMany")
+    @Transactional
+    void t9() {
+        Question question = questionRepository.findById(2).get();
+        int beforeCount = question.getAnswers().size();
+        Answer newAnswer = question.addAnswer("네 자동으로 생성됩니다.");
+        assertThat(newAnswer.getId()).isEqualTo(0);
+        int afterCount = question.getAnswers().size();
+        questionRepository.flush();
+        assertThat(afterCount).isEqualTo(beforeCount + 1);
+    }
+    @Test
+    @DisplayName("답변 조회")
+    @Transactional
+    void t10() {
+        Answer answer = answerRepository.findById(1).get();
+
+        assertThat(answer.getId()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("답변 조회 by oneToMany")
+    @Transactional
+    void t11() {
+        Question question = questionRepository.findById(2).get();
+
+        List<Answer> answers = question.getAnswers();
+        assertThat(answers).hasSize(1);
+
+        Answer answer = answers.get(0);
+        assertThat(answer.getContent()).isEqualTo("네 자동으로 생성됩니다.");
+    }
+
+    @Test
+    @DisplayName("findAnswer by question")
+    @Transactional
+    void t12() {
+        Question question = questionRepository.findById(2).get();
+
+        Answer answer1 = question.getAnswers().get(0);
+
+        assertThat(answer1.getId()).isEqualTo(1);
     }
 }
