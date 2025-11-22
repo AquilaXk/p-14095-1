@@ -13,8 +13,9 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Setter
 @Getter
 public class Answer {
+
+    // PK + AUTO_INCREMENT
     @Id
-    // AUTO_INCREMENT 설정
     @GeneratedValue(strategy = IDENTITY)
     private int id;
 

@@ -31,14 +31,14 @@ public class Question {
     private String content;
     // FetchType 기본 LAZY
     @OneToMany(mappedBy = "question", cascade = {CascadeType.REMOVE, CascadeType.PERSIST}) // OneToMany를 사용할 때 는 변수명 적어야한다
-    private List<Answer> answers = new ArrayList<>();
+    private List<Answer> answerList = new ArrayList<>();
 
     public Answer addAnswer(String content) {
         Answer answer = new Answer();
         answer.setContent(content);
         answer.setQuestion(this);
         answer.setCreateDate(LocalDateTime.now());
-        answers.add(answer);
+        answerList.add(answer);
 
         return answer;
     }
